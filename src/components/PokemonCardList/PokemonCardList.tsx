@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { Container, Grid, Pagination, Stack } from '@mui/material'
 import { useAppSelector } from '../../app/hooks'
 import { getPokemonsList } from '../../features/listOfPokemons/listOfPokemonsSlice'
 import { getFilterQuery, getQtyPerPage } from '../../features/pokemonsDataToDisplay/pokemonsDataToDisplay'
-import { fetchListOfPokemons } from '../../api/api'
+import { pokemonData, pokemonListItem } from '../../types/pokemon.model'
+import { fetchPokemonStats } from '../../api/api'
+import PokemonCard from '../PokemonCard/PokemonCard'
 
 const PokemonCardList: React.FC = () => {
   const filterQuery = useAppSelector(getFilterQuery)
@@ -14,35 +16,59 @@ const PokemonCardList: React.FC = () => {
   const [page, setPage] = useState(0)
   const [pageQty, setPageQty] = useState(0)
   const [filteredByName, setFilteredByName] = useState(pokemonsListFromServer)
-  const [pokemonsToDisplayList, setPokemonsToDisplayList] = useState([])
-  const [pokemonsToDisplayData, setPokemonsToDisplayData] = useState([])
+  const [pokemonsToDisplayData, setPokemonsToDisplayData] = useState<pokemonData[] | []>([])
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value)
   }
 
-  const totalpages = useCallback(() => {
-    setPageQty(Math.ceil(filteredByName.length / pokemonsPerPage))
-  }, [filteredByName])
+  const prepareList = (
+    pokemonsListFromServer: pokemonListItem[],
+    filterQuery: string,
+  ) => pokemonsListFromServer.filter((pokemon: pokemonListItem) => pokemon.name.includes(filterQuery))
 
+  const memoizedPreparedList = useCallback(
+    () => setFilteredByName(prepareList(pokemonsListFromServer, filterQuery)),
+    [pokemonsListFromServer, filterQuery])
+
+  const computePageQty = (filteredByName: pokemonListItem[] | [], pokemonsPerPage: number) => Math.floor(filteredByName.length / pokemonsPerPage)
+  const memoizedPageQty = useCallback(() => { setPageQty(computePageQty(filteredByName, pokemonsPerPage)) }, [filteredByName, pokemonsPerPage])
 
   useEffect(() => {
-    const preparedList = pokemonsListFromServer.filter(pokemon => pokemon.name.includes(filterQuery))
-    setFilteredByName(preparedList)
-    totalpages()
-  }, [filterQuery, pokemonsListFromServer, filteredByName])
+    memoizedPreparedList()
+  }, [pokemonsListFromServer, filterQuery])
 
-  // useEffect(async () => {
-  //   setPageQty(Math.ceil(filteredByName.length / pokemonsPerPage))
-  //   let preparedPokemonsToDisplay = filteredByName.slice(page * +pokemonsPerPage, page * +pokemonsPerPage + +pokemonsPerPage)
-  //   let result = []
+  useEffect(() => {
+    memoizedPageQty()
+  }, [filteredByName, pokemonsPerPage])
 
-  //   for (let pokemon of preparedPokemonsToDisplay) {
-  //     const response = await fetchListOfPokemons(pokemon.name)
-  //     result = [...result, response.data]
-  //   }
-  //   setPokemonsToDisplayData(result)
-  // }, [pokemonsPerPage, pokemonsListFromServer, filterQuery, filteredByName])
+  useEffect(async () => {
+    const preparedPokemonsToDisplay = filteredByName.slice(page * pokemonsPerPage, page * pokemonsPerPage + pokemonsPerPage)
+
+    let listOfDataToDisplay: any[] = []
+
+    for (const pokemon of preparedPokemonsToDisplay) {
+      const response = await fetchPokemonStats(pokemon.name)
+      listOfDataToDisplay = [...listOfDataToDisplay, response.data]
+    }
+
+    listOfDataToDisplay = listOfDataToDisplay.map(pokemon => ({
+      id: pokemon.id,
+      name: pokemon.name,
+      types: pokemon.types.map((type) => type.type.name),
+      moves: pokemon.moves.map((move) => move.move.name),
+      image: pokemon.sprites.front_default,
+      hp: pokemon.stats[0].base_stat,
+      attack: pokemon.stats[1].base_stat,
+      defense: pokemon.stats[2].base_stat,
+      specialAttack: pokemon.stats[3].base_stat,
+      specialDefense: pokemon.stats[4].base_stat,
+      speed: pokemon.stats[5].base_stat,
+      weight: pokemon.weight,
+    }))
+
+    setPokemonsToDisplayData(listOfDataToDisplay)
+  }, [page, pokemonsPerPage, filteredByName])
 
   return (
     <>
@@ -63,8 +89,16 @@ const PokemonCardList: React.FC = () => {
           onChange={handleChange}
         />
       </Stack>
-      <Grid container>
-        {filteredByName && filteredByName.map(poke => (<p>{poke.name}' '</p>))}
+      <Grid container
+        spacing={1}
+        sx={{ p: '45px' }}
+      >
+        {pokemonsToDisplayData.map((pokemon: pokemonData) => (
+          <PokemonCard
+            key={pokemon.id}
+            data={pokemon}
+          />
+        ))}
       </Grid>
     </Container>
     </>

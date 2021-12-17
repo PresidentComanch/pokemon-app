@@ -9,11 +9,7 @@ function App () {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (pokemonsTypes) {
-      dispatch(fetchAsyncListOfPokemons(pokemonsTypes))
-    } else {
-      dispatch(fetchAsyncListOfPokemons())
-    }
+    dispatch(fetchAsyncListOfPokemons(pokemonsTypes))
   }, [dispatch, pokemonsTypes])
 
   return (

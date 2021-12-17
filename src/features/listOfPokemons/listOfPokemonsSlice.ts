@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { fetchListOfPokemons } from '../../api/api'
 import { RootState } from '../../app/store'
-import { listOfPokemonsState, PokemonFromFetchingByType } from '../../types/pokemon.model';
+import { listOfPokemonsState, PokemonFromFetchingByType } from '../../types/pokemon.model'
 
 const initialState: listOfPokemonsState = {
   pokemonsList: [],

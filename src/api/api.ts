@@ -12,6 +12,4 @@ export const fetchListOfPokemons = (pokemonType: string = '') => {
 
 export const fetchTypesList = () => axios.get('type/')
 
-export const fetchPokemonStats = (pokemonId: string) => {
-  axios.get(`pokemon/${pokemonId}`)
-}
+export const fetchPokemonStats = (pokemonName: string) => axios.get(`pokemon/${pokemonName}`)

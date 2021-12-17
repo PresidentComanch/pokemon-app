@@ -14,8 +14,11 @@ export interface listOfPokemonsState {
 }
 
 export interface pokemonData {
+  id: string;
   name: string;
   types: string[];
+  moves: string[],
+  image: string,
   abilities: string[];
   hp: number;
   attack: number;
