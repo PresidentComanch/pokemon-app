@@ -50,10 +50,10 @@ const PokemonCard: React.FC<Props> = ({ data }) => {
             title={name}
           />
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography gutterBottom variant="h5" component="div" textAlign='center'>
               {name}
             </Typography>
-            <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1} sx={{ mb: 1 }} justifyContent="center">
               {types.map(type => (<Chip label={type} size="small" key={nanoid()} sx={{ bgcolor: `${colorForType[type]}` }}/>))}
             </Stack>
             <Typography
@@ -83,7 +83,7 @@ const PokemonCard: React.FC<Props> = ({ data }) => {
               more stats
             </Button>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent>
+              <CardContent sx={{ p: 0 }}>
                 <Typography
                   variant="body2"
                   color="text.secondary"

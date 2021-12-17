@@ -7,6 +7,7 @@ import { getFilterQuery, getQtyPerPage } from '../../features/pokemonsDataToDisp
 import { pokemonData, pokemonListItem } from '../../types/pokemon.model'
 import { fetchPokemonStats } from '../../api/api'
 import PokemonCard from '../PokemonCard/PokemonCard'
+import Loading from '../Loading/Loading'
 
 const PokemonCardList: React.FC = () => {
   const filterQuery = useAppSelector(getFilterQuery)
@@ -17,6 +18,7 @@ const PokemonCardList: React.FC = () => {
   const [pageQty, setPageQty] = useState(0)
   const [filteredByName, setFilteredByName] = useState(pokemonsListFromServer)
   const [pokemonsToDisplayData, setPokemonsToDisplayData] = useState<pokemonData[] | []>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value)
@@ -32,6 +34,7 @@ const PokemonCardList: React.FC = () => {
   }, [filteredByName, pokemonsPerPage])
 
   useEffect(async () => {
+    setIsLoading(!isLoading)
     const preparedPokemonsToDisplay = filteredByName.slice(((page - 1) * pokemonsPerPage), ((page - 1) * pokemonsPerPage + pokemonsPerPage))
 
     let listOfDataToDisplay: any[] = []
@@ -57,6 +60,7 @@ const PokemonCardList: React.FC = () => {
     }))
 
     setPokemonsToDisplayData(listOfDataToDisplay)
+    setIsLoading(false)
   }, [page, pokemonsPerPage, filteredByName])
 
   return (
@@ -82,12 +86,7 @@ const PokemonCardList: React.FC = () => {
         spacing={1}
         sx={{ p: '45px' }}
       >
-        {pokemonsToDisplayData.map((pokemon: pokemonData) => (
-          <PokemonCard
-            key={pokemon.id}
-            data={pokemon}
-          />
-        ))}
+        {isLoading ? <Loading /> : pokemonsToDisplayData.map((pokemon: pokemonData) => (<PokemonCard key={pokemon.id} data={pokemon} />))} 
       </Grid>
     </Container>
     </>
