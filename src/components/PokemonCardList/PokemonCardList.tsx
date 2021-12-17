@@ -13,7 +13,7 @@ const PokemonCardList: React.FC = () => {
   const pokemonsListFromServer = useAppSelector(getPokemonsList)
   const pokemonsPerPage = useAppSelector(getQtyPerPage)
 
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [pageQty, setPageQty] = useState(0)
   const [filteredByName, setFilteredByName] = useState(pokemonsListFromServer)
   const [pokemonsToDisplayData, setPokemonsToDisplayData] = useState<pokemonData[] | []>([])
@@ -32,7 +32,7 @@ const PokemonCardList: React.FC = () => {
   }, [filteredByName, pokemonsPerPage])
 
   useEffect(async () => {
-    const preparedPokemonsToDisplay = filteredByName.slice(page * pokemonsPerPage, page * pokemonsPerPage + pokemonsPerPage)
+    const preparedPokemonsToDisplay = filteredByName.slice(((page - 1) * pokemonsPerPage), ((page - 1) * pokemonsPerPage + pokemonsPerPage))
 
     let listOfDataToDisplay: any[] = []
 
