@@ -21,14 +21,16 @@ const PokemonCardList: React.FC = () => {
     setPage(value)
   }
 
-  setFilteredByName(pokemonsListFromServer.filter(pokemon => pokemon.name.includes(filterQuery)))
+  const totalpages = useCallback(() => {
+    setPageQty(Math.ceil(filteredByName.length / pokemonsPerPage))
+  }, [filteredByName])
 
-  const countpages = (list, num) => list.length / num
 
-  
-
-  const pageCount = useMemo(() => filteredByName.length / pokemonsPerPage), [filteredByName])
-  setPageQty(pageCount)
+  useEffect(() => {
+    const preparedList = pokemonsListFromServer.filter(pokemon => pokemon.name.includes(filterQuery))
+    setFilteredByName(preparedList)
+    totalpages()
+  }, [filterQuery, pokemonsListFromServer, filteredByName])
 
   // useEffect(async () => {
   //   setPageQty(Math.ceil(filteredByName.length / pokemonsPerPage))
