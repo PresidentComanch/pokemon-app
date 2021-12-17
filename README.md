@@ -1,3 +1,3 @@
-[DEMO LINK](https://PresidentComanch.github.io/pokemon-app/), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+[DEMO LINK](https://PresidentComanch.github.io/pokemon-app/)
 
-## Typescript React Redux Axios Material-UI 
+## Typescript, React, ReduxToolkit, Axios, Material-UI 
