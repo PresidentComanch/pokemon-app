@@ -32,8 +32,6 @@ const colorForType: { [key: string] : string } = {
 
 const PokemonCard: React.FC<Props> = ({ data }) => {
   const { name, types, image, hp, attack, defense, specialAttack, specialDefense, speed, weight } = data
-  console.log(data)
-
   const [expanded, setExpanded] = useState(false)
 
   const handleExpandClick = () => {

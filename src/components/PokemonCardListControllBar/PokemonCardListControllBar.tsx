@@ -79,7 +79,6 @@ const PokemonCardListControllBar: React.FC = () => {
                 multiple
                 value={selectedTypesList}
                 label="Type"
-                autoWidth
                 input={<OutlinedInput label="Type" />}
                 onChange={typeSelectorHandler}
               >
