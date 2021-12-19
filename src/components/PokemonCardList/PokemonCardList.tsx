@@ -86,7 +86,7 @@ const PokemonCardList: React.FC = () => {
         spacing={1}
         sx={{ p: '45px' }}
       >
-        {isLoading ? <Loading /> : pokemonsToDisplayData.map((pokemon: pokemonData) => (<PokemonCard key={pokemon.id} data={pokemon} />))} 
+        {isLoading ? <Loading /> : pokemonsToDisplayData.map((pokemon: pokemonData) => (<PokemonCard key={pokemon.id} data={pokemon} />))}
       </Grid>
     </Container>
     </>
