@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Alert, Button, Container, Stack } from '@mui/material'
 
-const PageNotFound = () => {
+const PageNotFound: React.FC = () => {
   return (
     <Container >
       <Stack spacing={6} alignItems='center' justifyContent='center' sx={{ height: '100vh' }} >
