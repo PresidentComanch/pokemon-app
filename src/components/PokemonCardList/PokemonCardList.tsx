@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Container, Grid, Pagination, Stack } from '@mui/material'
 import { useAppSelector } from '../../app/hooks'
