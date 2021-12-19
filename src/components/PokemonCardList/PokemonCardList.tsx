@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { Container, Grid, Pagination, Stack } from '@mui/material'
 import { useAppSelector } from '../../app/hooks'
@@ -27,11 +27,9 @@ const PokemonCardList: React.FC = () => {
   useEffect(() => {
     const preparedList = pokemonsListFromServer.filter((pokemon: pokemonListItem) => pokemon.name.includes(filterQuery))
     setFilteredByName(preparedList)
-  }, [pokemonsListFromServer, filterQuery])
-
-  useEffect(() => {
-    setPageQty(Math.floor(filteredByName.length / pokemonsPerPage))
-  }, [filteredByName, pokemonsPerPage])
+    setPageQty(Math.floor(preparedList.length / pokemonsPerPage))
+    setPage(1)
+  }, [pokemonsListFromServer, filterQuery, pokemonsPerPage])
 
   useEffect(async () => {
     setIsLoading(!isLoading)
